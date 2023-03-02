@@ -9,10 +9,10 @@ from transformers import GPT2Tokenizer
 openai.api_key = os.environ['OPENAI_API_KEY']
 
 # alias of open_file
-def read_file(filename):
+def open_file(filename):
     return open_file(filename)
 
-def open_file(filename):
+def read_file(filename):
     try:
         with open(filename, 'r', encoding='utf-8') as infile:
             return infile.read()
@@ -28,7 +28,6 @@ def save_file(filepath, content):
 def format_counter(c, w=4):
     return f"{c:0{w}d}"
 
-# openai.api_key = open_file('openaiapikey.txt').strip()
 def gpt3_completion(prompt, engine='text-davinci-003', temp=0.4, top_p=1.0, tokens=1000, freq_pen=0.0, pres_pen=0.0, stop=['asdfasdf', 'asdasdf']):
     max_retry = 5
     retry = 0
@@ -63,7 +62,7 @@ def gpt3_embedding(content, engine='text-embedding-ada-002'):
     vector = response['data'][0]['embedding']  # this is a normal list
     return vector
 
-def create_prompt(template_file, data):
+def create_prompt_from_file(template_file, data):
     template_path1 = os.path.join(os.path.dirname(__file__), 'templates/')
     template_path2 = os.path.join(os.path.dirname(__file__), '../templates/')
 
@@ -72,12 +71,9 @@ def create_prompt(template_file, data):
     elif os.path.exists(template_path2 + template_file + '.txt'):
         template_string = read_file(template_path2 + template_file + '.txt')
     else:
-        template_string = template_file
+        return null
 
     return create_prompt_from_string(template_string, data)
-
-def create_prompt_from_file(template_file, data):
-    return create_prompt(template_file, data)
 
 def create_prompt_from_string(template_string, data):
     data['uuid'] = str(uuid4())
