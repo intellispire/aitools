@@ -28,6 +28,24 @@ def save_file(filepath, content):
 def format_counter(c, w=4):
     return f"{c:0{w}d}"
 
+def timestamp_to_datetime(unix_time):
+    return datetime.datetime.fromtimestamp(unix_time).strftime("%A, %B %d, %Y at %I:%M%p %Z")
+
+def chatgpt_completion(messages, model="gpt-3.5-turbo"):
+    response = openai.ChatCompletion.create(model=model, messages=messages)
+    text = response['choices'][0]['message']['content']
+    filename = 'chat_%s_muse.txt' % time()
+    if not os.path.exists('chat_logs'):
+        os.makedirs('chat_logs')
+    save_file('chat_logs/%s' % filename, text)
+    return text
+
+def flatten_convo(conversation):
+    convo = ''
+    for i in conversation:
+        convo += '%s: %s\n' % (i['role'].upper(), i['content'])
+    return convo.strip()
+
 def gpt3_completion(prompt, engine='text-davinci-003', temp=0.4, top_p=1.0, tokens=1000, freq_pen=0.0, pres_pen=0.0, stop=['asdfasdf', 'asdasdf']):
     max_retry = 5
     retry = 0
