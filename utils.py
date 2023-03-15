@@ -10,7 +10,7 @@ openai.api_key = os.environ['OPENAI_API_KEY']
 
 # alias of open_file
 def open_file(filename):
-    return open_file(filename)
+    return read_file(filename)
 
 def read_file(filename):
     try:
