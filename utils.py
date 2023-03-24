@@ -64,6 +64,12 @@ def gpt3_completion(prompt, engine='text-davinci-003', temp=0.4, top_p=1.0, toke
             text = response['choices'][0]['text'].strip()
             #text = re.sub('\s+', ' ', text)
             filename = '%s_gpt3.txt' % time()
+
+            # Check if the subdirectory exists
+            if not os.path.exists('gpt3_logs'):
+                # If the subdirectory doesn't exist, create it
+                os.mkdir('gpt3_logs')
+
             save_file('gpt3_logs/%s' % filename, prompt + '\n\n==========\n\n' + text)
             return text
         except Exception as oops:
@@ -84,12 +90,15 @@ def create_prompt_from_file(template_file, data):
     template_path1 = os.path.join(os.path.dirname(__file__), 'templates/')
     template_path2 = os.path.join(os.path.dirname(__file__), '../templates/')
 
-    if os.path.exists(template_path1 + template_file + '.txt'):
-        template_string = read_file(template_path1 + template_file + '.txt')
-    elif os.path.exists(template_path2 + template_file + '.txt'):
-        template_string = read_file(template_path2 + template_file + '.txt')
+    if (not template_file.endswith('.txt')):
+         template_file += '.txt'
+
+    if os.path.exists(template_path1 + template_file):
+        template_string = read_file(template_path1 + template_file)
+    elif os.path.exists(template_path2 + template_file):
+        template_string = read_file(template_path2 + template_file)
     else:
-        return null
+        return ''
 
     return create_prompt_from_string(template_string, data)
 
