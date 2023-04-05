@@ -15,8 +15,8 @@ def chunk_text(text, token_size=2000, regex_type='sentence'):
         raise ValueError("Invalid regex type: must be 'sentence' or 'paragraph'")
 
     # Split text into chunks using the specified regular expression
-    # chunks = re.findall(regex, text)
-    chunks = text.split('\n\n')
+    chunks = re.findall(regex, text)
+    # chunks = text.split('\n\n')
 
     # Initialize an empty list to store the filtered chunks
     filtered_chunks = []
